@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Story; // Add this line
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role; // Add this line
-use Spatie\Permission\Models\Permission; // Add this line
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Enum\RolesEnum;
 use App\Enum\PermissionsEnum;
 
@@ -61,5 +62,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'admin@example.com',
         ])->assignRole(RolesEnum::Admin);
+
+        Story::factory(10)->create();
     }
 }

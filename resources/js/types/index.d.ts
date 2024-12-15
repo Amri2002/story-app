@@ -5,6 +5,22 @@ export interface User {
     name: string;
     email: string;
     email_verified_at?: string;
+    permissions: string[];
+    roles: string[];
+}
+
+export type PaginatedData<T= any> = {
+    data: T[];
+    links: Record<string, string>
+}
+
+export type Story = {
+    id: number;
+    name: string;
+    photo: string;
+    description: string;
+    user: User;
+    updated_at: string;
 }
 
 export type PageProps<

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Story;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+ use App\Http\Resources\StoryResource;
+
 
 class StoryController extends Controller
 {
@@ -12,7 +15,11 @@ class StoryController extends Controller
      */
     public function index()
     {
-        //
+        $paginated = Story::latest()->paginate(5);
+
+        return Inertia::render('Story/Index', [
+            'stories' => StoryResource::collection($paginated)
+        ]);
     }
 
     /**
