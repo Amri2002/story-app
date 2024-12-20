@@ -1,11 +1,11 @@
-import Checkbox from '@/Components/Checkbox';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
 
 export default function Login({
     status,
@@ -20,10 +20,21 @@ export default function Login({
         remember: false,
     });
 
+    // CSRF token from the meta tag in the HTML
+    const csrfToken = document.head.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
         post(route('login'), {
+            data: {
+                email: data.email,
+                password: data.password,
+                remember: data.remember,
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken, // Send CSRF token with the request
+            },
             onFinish: () => reset('password'),
         });
     };
@@ -31,7 +42,6 @@ export default function Login({
     return (
         <GuestLayout>
             <Head title="Log in" />
-
             {status && (
                 <div className="mb-4 text-sm font-medium text-green-600">
                     {status}
@@ -41,7 +51,6 @@ export default function Login({
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
-
                     <TextInput
                         id="email"
                         type="email"
@@ -52,13 +61,11 @@ export default function Login({
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
                     />
-
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
-
                     <TextInput
                         id="password"
                         type="password"
@@ -68,7 +75,6 @@ export default function Login({
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
-
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
@@ -77,9 +83,7 @@ export default function Login({
                         <Checkbox
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
+                            onChange={(e) => setData('remember', e.target.checked)}
                         />
                         <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
                             Remember me

@@ -18,8 +18,7 @@ Route::middleware('auth')->group(function () {
             return Inertia::render('Dashboard');
         })->name('dashboard');
 
-        Route::get('/story', [StoryController::class, 'index'])
-            ->name('story.index');
+        Route::resource('story', StoryController::class);
         });
     });
 

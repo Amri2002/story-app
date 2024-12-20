@@ -4,9 +4,11 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class StoryResource extends JsonResource
 {
+    public static $wrap = false;
     /**
      * Transform the resource into an array.
      *
@@ -17,7 +19,8 @@ class StoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'photo' => $this->photo, // Add this line to include the photo
+            'photo' => $this->photo ?
+                Storage::url($this->photo) : '', 
             'description' => $this->description,
             'user' => new UserResource($this->user),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),

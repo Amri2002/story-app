@@ -6,6 +6,7 @@ use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
  use App\Http\Resources\StoryResource;
+ use Illuminate\Support\Str;
 
 
 class StoryController extends Controller
@@ -27,7 +28,7 @@ class StoryController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Story/Create');
     }
 
     /**
@@ -35,7 +36,21 @@ class StoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required','string'],
+            'photo' => ['nullable','image'],
+            'description' => ['required','string'],
+        ]);
+
+        $photo = $data ['photo'] ?? null;
+        $data['user_id'] = auth()->id();
+
+        if ($photo) {
+            $data['photo']= $photo->store('story/'.Str::random(), 'public');
+        }
+        Story::create($data);
+
+        return to_route('story.index')->with('success', 'Story created successfully');
     }
 
     /**
@@ -43,7 +58,9 @@ class StoryController extends Controller
      */
     public function show(Story $story)
     {
-        //
+        return Inertia::render('Story/Show', [
+            'story' => new StoryResource($story)
+        ]);
     }
 
     /**
@@ -51,7 +68,9 @@ class StoryController extends Controller
      */
     public function edit(Story $story)
     {
-        //
+        return Inertia::render('Story/Edit', [
+            'story' => new StoryResource($story)
+        ]);
     }
 
     /**
@@ -59,7 +78,15 @@ class StoryController extends Controller
      */
     public function update(Request $request, Story $story)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required','string'],
+            'photo' => ['nullable','image'],
+            'description' => ['nullable','string'],
+        ]);
+
+        $story->update($data);
+
+        return to_route('story.index')->with('success', 'Story updated successfully');
     }
 
     /**
@@ -67,6 +94,7 @@ class StoryController extends Controller
      */
     public function destroy(Story $story)
     {
-        //
+        $story->delete();
+        return to_route('story.index')->with('success', 'Story deleted successfully');
     }
 }

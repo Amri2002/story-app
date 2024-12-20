@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->longText('description')->nullable();
+            $table->longText('description');
             $table->string('photo')->nullable(); // Add this line
             $table->foreignIdFor(\App\Models\User::class);
             $table->timestamps();

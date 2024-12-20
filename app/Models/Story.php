@@ -11,6 +11,8 @@ class Story extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'description', 'photo', 'user_id'];
+
     public function upvotes(): HasMany
     {
         return $this->hasMany(Upvote::class);
