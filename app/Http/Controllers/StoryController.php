@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
  use App\Http\Resources\StoryResource;
  use Illuminate\Support\Str;
+ use Illuminate\Support\Facades\Storage;
 
 
 class StoryController extends Controller
@@ -81,8 +82,16 @@ class StoryController extends Controller
         $data = $request->validate([
             'name' => ['required','string'],
             'photo' => ['nullable','image'],
-            'description' => ['nullable','string'],
+            'description' => ['required','string'],
         ]);
+        $photo = $data ['photo'] ?? null;
+        if ($photo) {
+            if($story->photo){
+                Storage::disk('public')->deleteDirectory(dirname
+                ($story->photo));
+            }
+            $data['photo']= $photo->store('story/'.Str::random(), 'public');
+        }
 
         $story->update($data);
 
@@ -95,6 +104,11 @@ class StoryController extends Controller
     public function destroy(Story $story)
     {
         $story->delete();
+        if($story->photo){
+            Storage::disk('public')->deleteDirectory(dirname(
+                $story->photo));
+        }
+
         return to_route('story.index')->with('success', 'Story deleted successfully');
     }
 }

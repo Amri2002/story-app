@@ -13,22 +13,23 @@ import TextArea from '@/Components/TextArea';
 //import {can} from "@/helpers";
 
 
-export default function Show() {
+export default function Show({story}:{story: Story}) {
     const{
         data,
         setData,
         processing, 
-        post,
         errors,
+        post
     } = useForm({
-        name: '',
+        name: story.name,
         photo: "",
-        description: '',
+        description: story.description,
+        _method: 'PUT'
     })
 
-    const createStory: FormEventHandler = (ev) => {
+    const updateStory: FormEventHandler = (ev) => {
         ev.preventDefault();
-        post(route('story.store'),{
+        post(route('story.update', story.id),{
             preserveScroll: true,   
         });
     }
@@ -36,14 +37,14 @@ export default function Show() {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Create New Story
+                    Edit Story: <b>{story.name}</b>
                 </h2>
             }
         >
-            <Head title="Create New Story" />            
+            <Head title={'Edit Story ' + story.name} />            
             <div className="mb-4 overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
             <div className="p-6 text-gray-900 dark:text-gray-100 flex gap-8">
-                <form onSubmit={createStory} className='w-full'>
+                <form onSubmit={updateStory} className='w-full'>
                 
 
                 <div className='mb-8'>
@@ -60,7 +61,9 @@ export default function Show() {
                     />
                     <InputError className="mt-2" message={errors.name} />
                 </div>
-
+                {story.photo && (
+                    <div className='mb-4'><img src={story.photo} className='w-64' />
+                    </div>)}
                 <div className='mb-8'>
                     <InputLabel htmlFor="photo" value="Photo" />
                         <TextInput

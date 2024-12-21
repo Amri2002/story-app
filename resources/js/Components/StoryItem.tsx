@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Story } from '@/types';
 import { Link } from '@inertiajs/react'; // Adjust the import based on your routing library
+import StoryActionsDropdown from './StoryActionsDropdown';
 
 interface Props {
     story: Story;
@@ -55,6 +56,9 @@ const StoryItem: React.FC<Props> = ({ story }) => {
                     {story.description.length<=200 && (
                         <p>{story.description}</p>
                     )}
+                </div>
+                <div>
+                    <StoryActionsDropdown story={story} />
                 </div>
             </div>
         </div>
