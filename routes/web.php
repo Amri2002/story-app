@@ -5,6 +5,7 @@ use App\Http\Controllers\StoryController; // Add this line
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\UpvoteController;
 
 Route::redirect('/', '/dashboard');
 
@@ -19,6 +20,11 @@ Route::middleware('auth')->group(function () {
         })->name('dashboard');
 
         Route::resource('story', StoryController::class);
+
+        Route::post('/story/{story}/upvote',[UpvoteController::class,'store'])
+            ->name('upvote.store');
+         Route::delete('/upvote/{story}',[UpvoteController::class,'destroy'])
+            ->name('upvote.destroy');
         });
     });
 

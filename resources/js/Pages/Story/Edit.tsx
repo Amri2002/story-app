@@ -22,7 +22,7 @@ export default function Show({story}:{story: Story}) {
         post
     } = useForm({
         name: story.name,
-        photo: "",
+        photo: null as File | null,
         description: story.description,
         _method: 'PUT'
     })
@@ -70,7 +70,11 @@ export default function Show({story}:{story: Story}) {
                             id="photo"
                             type="file"
                             className="mt-1 block w-full"
-                            onChange={(e) => setData('photo', e.target.files[0])}
+                            onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                    setData('photo', e.target.files[0]);
+                                }
+                            }}
                                 />
                     <InputError className="mt-2" message={errors.photo} />
                 </div>

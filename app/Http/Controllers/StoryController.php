@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Story;
+use App\Models\Upvote;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Resources\UserResource;
  use App\Http\Resources\StoryResource;
  use Illuminate\Support\Str;
  use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class StoryController extends Controller
 {
@@ -17,8 +20,22 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $paginated = Story::latest()->paginate(5);
-
+        $currentUserId = Auth::id();
+        $paginated = Story::latest()
+            ->withCount(['upvotes as upvote_count' => function($query) {
+                $query->select(DB::raw('SUM(CASE WHEN upvote = 1 THEN 1 ELSE -1 END)'));
+            }])
+            ->withExists([
+                'upvotes as user_has_upvoted' => function ($query) use($currentUserId){
+                    $query->where('user_id', $currentUserId)
+                    ->where('upvote',1);
+                },
+                'upvotes as user_has_downvoted' => function ($query)use($currentUserId){
+                    $query->where('user_id', $currentUserId)
+                    ->where('upvote',0);
+                }
+            ])
+            ->paginate(5);
         return Inertia::render('Story/Index', [
             'stories' => StoryResource::collection($paginated)
         ]);
@@ -59,6 +76,20 @@ class StoryController extends Controller
      */
     public function show(Story $story)
     {
+        $story->upvote_count = Upvote::where('story_id', $story->id)
+            ->sum(DB::raw('CASE WHEN upvote = 1 THEN 1 ELSE -1 END'));
+
+        $story->user_has_upvoted = Upvote::where('story_id', $story->id)
+            ->where('user_id', Auth::id())
+            ->where('upvote', 1)
+            ->exists();
+
+        $story->user_has_downvoted = Upvote::where('story_id', $story->id)
+            ->where('user_id', Auth::id())
+            ->where('upvote', 0)
+            ->exists();
+
+
         return Inertia::render('Story/Show', [
             'story' => new StoryResource($story)
         ]);
