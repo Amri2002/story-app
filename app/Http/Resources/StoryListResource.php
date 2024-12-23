@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class StoryResource extends JsonResource
+class StoryListResource extends JsonResource
 {
     public static $wrap = false;
     /**
@@ -27,14 +27,7 @@ class StoryResource extends JsonResource
             'upvote_count' => $this->upvote_count ?: 0,
             'user_has_upvoted' => (bool)$this->user_has_upvoted,
             'user_has_downvoted' => (bool)$this->user_has_downvoted,
-            'comments' => $this->comments->map(function ($comment){
-                return[
-                    'id' => $comment->id,
-                    'comment' => $comment->comment,
-                    'created_at' => $comment->created_at->format('Y-m-d H:i:s'),
-                    'user' => new UserResource($comment->user),
-                ];
-            }),
+            
         ];
     }
 }

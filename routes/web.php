@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoryController; // Add this line
 use Illuminate\Foundation\Application;
@@ -25,6 +26,12 @@ Route::middleware('auth')->group(function () {
             ->name('upvote.store');
          Route::delete('/upvote/{story}',[UpvoteController::class,'destroy'])
             ->name('upvote.destroy');
+
+        Route::post('/story/{story}/comments',[CommentController::class,'store'])
+            ->name('comment.store');
+        Route::delete('/comment/{comment}',[CommentController::class,'destroy'])
+            ->name('comment.destroy');
+        
         });
     });
 

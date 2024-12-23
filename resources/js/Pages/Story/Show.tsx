@@ -1,11 +1,10 @@
+import React from 'react';
+import { Story, Comment } from '@/types';
+import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head, Link, usePage} from '@inertiajs/react';
-import {Story, PageProps, PaginatedData} from "@/types";
-import FeatureItem from "@/Components/StoryItem";
-import StoryItem from '@/Components/StoryItem';
-//import {can} from "@/helpers";
 import StoryUpvoteDownvote from '@/Components/StoryUpvoteDownvote';
-
+import NewCommentForm from '@/Components/NewCommentForm';
+import CommentItem from '@/Components/CommentItem';
 
 export default function Show({story}:{story: Story}) {
     return (
@@ -30,8 +29,13 @@ export default function Show({story}:{story: Story}) {
                     />
                 )}
                     <p>{story.description}</p>
+                <div className="mt-8">
+                    <NewCommentForm story ={story}/>
+                    {story.comments.map(comment =>(
+                        <CommentItem comment={comment} key={comment.id} />
+                    ))}
                 </div>
-                
+                </div>
             </div>
         </div> 
         </AuthenticatedLayout>

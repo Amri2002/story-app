@@ -12,6 +12,7 @@ use App\Http\Resources\UserResource;
  use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\StoryListResource;
 
 class StoryController extends Controller
 {
@@ -37,7 +38,7 @@ class StoryController extends Controller
             ])
             ->paginate(5);
         return Inertia::render('Story/Index', [
-            'stories' => StoryResource::collection($paginated)
+            'stories' => StoryListResource::collection($paginated)
         ]);
     }
 
