@@ -20,7 +20,15 @@ Route::middleware('auth')->group(function () {
             return Inertia::render('Dashboard');
         })->name('dashboard');
 
-        Route::resource('story', StoryController::class);
+        Route::resource('story', StoryController::class)
+            ->except(['index','show'])
+            ->middleware('can:' .\App\Enum\PermissionsEnum::ManageStories->value);
+
+        Route::get('/story', [StoryController::class, 'index'])
+            ->name('story.index');
+        
+        Route::get('/story/{story}', [StoryController::class, 'show'])
+            ->name('story.show');
 
         Route::post('/story/{story}/upvote',[UpvoteController::class,'store'])
             ->name('upvote.store');
@@ -29,8 +37,10 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/story/{story}/comments',[CommentController::class,'store'])
             ->name('comment.store');
+            ->middleware('can:' .\App\Enum\PermissionsEnum::ManageComments->value);
         Route::delete('/comment/{comment}',[CommentController::class,'destroy'])
             ->name('comment.destroy');
+            ->middleware('can:' .\App\Enum\PermissionsEnum::ManageComments->value);
         
         });
     });

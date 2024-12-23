@@ -23,6 +23,9 @@ class CommentController extends Controller
     }
     public function destroy(Comment $comment)
     {
+        if ($comment->user_id !== Auth::id()) {
+            abort(403);
+        }
         $storyId = $comment->story_id;
         $comment->delete();
         return to_route('story.show', $storyId);

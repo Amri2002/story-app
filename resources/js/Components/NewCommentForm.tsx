@@ -3,10 +3,10 @@ import { useForm, usePage } from '@inertiajs/react';
 import { Story } from '@/types';
 import TextArea from '@/Components/TextArea';
 import PrimaryButton from '@/Components/PrimaryButton';
-//import { can } from '@/helpers';
+import { can } from '@/helpers';
 
 export default function NewCommentForm({story}: {story: Story}){
-    const user = usePage().props.auth.user;
+  const user= usePage().props.auth.user;
 
     const {
       data,
@@ -27,7 +27,13 @@ export default function NewCommentForm({story}: {story: Story}){
       })
     }
   
-
+    if(!can(user, 'manage_comments')){
+      return(
+        <div className="text-center text-gray-500 dark:text-gray-400">
+          You are not allowed to comment
+        </div>
+      )
+    }
   
     return(
         <form onSubmit={createComment} className="flex items-center py-2 rounded-lg bg-gray-50 dark:bg-gray-800 mb-4">
