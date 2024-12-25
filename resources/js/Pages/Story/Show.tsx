@@ -18,7 +18,6 @@ export default function Show({story}:{story: Story}) {
             <Head title="{'Story '+ story.name}" />            
             <div className="mb-4 overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
             <div className="p-6 text-gray-900 dark:text-gray-100 flex gap-8">
-            <StoryUpvoteDownvote story={story} />
                 <div className="flex-1">
                     <h2 className='text-2xl mb-2'>{story.name}</h2>
                     {story.photo && (
@@ -29,6 +28,9 @@ export default function Show({story}:{story: Story}) {
                     />
                 )}
                     <p>{story.description}</p>
+                    <div className="py-4">
+                        <StoryUpvoteDownvote story={story} />
+                    </div>
                 <div className="mt-8">
                     <NewCommentForm story ={story}/>
                     {story.comments.map(comment =>(

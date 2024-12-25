@@ -37,6 +37,7 @@ export default function Authenticated({
                                 </NavLink>
 
                                 <NavLink
+                                    prefetch={['mount', 'hover']}
                                     href={route('story.index')}
                                     active={route().current('story.index')}
                                 >
@@ -154,6 +155,7 @@ export default function Authenticated({
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink
+                            prefetch={['mount', 'hover']}
                             href={route('story.index')}
                             active={route().current('story.index')}
                         >

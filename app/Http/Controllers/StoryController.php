@@ -22,7 +22,8 @@ class StoryController extends Controller
     public function index()
     {
         $currentUserId = Auth::id();
-        $paginated = Story::latest()
+        //$paginated = Story::latest()
+        $stories = Story::latest()
             ->withCount(['upvotes as upvote_count' => function($query) {
                 $query->select(DB::raw('SUM(CASE WHEN upvote = 1 THEN 1 ELSE -1 END)'));
             }])
@@ -36,9 +37,11 @@ class StoryController extends Controller
                     ->where('upvote',0);
                 }
             ])
-            ->paginate(5);
+            //->paginate(5);
+            ->get();
         return Inertia::render('Story/Index', [
-            'stories' => StoryListResource::collection($paginated)
+            //'stories' => StoryListResource::collection($paginated)
+            'stories' => StoryResource::collection($stories)
         ]);
     }
 

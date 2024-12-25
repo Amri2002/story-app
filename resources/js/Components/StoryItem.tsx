@@ -18,8 +18,8 @@ export default function StoryItem({story}: {story: Story}){
 
     return (
         <div className="mb-4 overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-            <div className="p-6 text-gray-900 dark:text-gray-100 flex gap-8">
-                <StoryUpvoteDownvote story={story} />
+            <div className="p-10 text-gray-900 dark:text-gray-100 flex gap-8 ">
+               
                 <div className="flex-1">
                     <h2 className='text-2xl mb-2'>
                         <Link href={route('story.show', story.id)}>
@@ -46,7 +46,9 @@ export default function StoryItem({story}: {story: Story}){
                     {story.description.length<=200 && (
                         <p>{story.description}</p>
                     )}
-
+                    <div className="py-4">
+                        <StoryUpvoteDownvote story={story} />
+                    </div>
                     <div className="py-4">
                         <Link href ={route('story.show', story)}
                             className="inline-flex gap-2 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 

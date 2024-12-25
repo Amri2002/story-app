@@ -8,7 +8,6 @@ import {can} from "@/helpers";
 
 export default function Index({auth, stories}: PageProps<{stories: 
     PaginatedData<Story>}>){
-
     return (
         <AuthenticatedLayout
             header={
