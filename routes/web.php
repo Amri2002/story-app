@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\UpvoteController;
+use App\Http\Controllers\DashboardController;
 use App\Enum\PermissionsEnum;
 use App\Enum\RolesEnum;
 
@@ -35,9 +36,8 @@ Route::middleware('auth')->group(function () {
         RolesEnum::Admin->value
         )
         ])->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware(['auth', 'verified'])->name('dashboard');
 
         Route::resource('story', StoryController::class)
             ->except(['index','show'])
