@@ -6,6 +6,8 @@ use App\Models\Story;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Inertia\Inertia;
+use App\Http\Resources\StoryResource;
+use App\Http\Resources\UserResource;
 
 class DashboardController extends Controller
 {
@@ -23,8 +25,8 @@ class DashboardController extends Controller
             ->get();
 
         return Inertia::render('Dashboard', [
-            'recentStories' => $recentStories,
-            'recentUsers' => $recentUsers,
+            'recentStories' => StoryResource::collection($recentStories)->resolve(), // <-- Use Resource
+            'recentUsers' => UserResource::collection($recentUsers)->resolve(),      // <-- Use Resource
             'storiesCount' => Story::count(),
             'usersCount' => User::count(),
             'rolesCount' => Role::count(),
