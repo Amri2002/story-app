@@ -163,39 +163,43 @@ export default function Dashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Quick Actions</h3>
-              <Settings className="w-5 h-5 text-gray-400" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-              <a
-                href="/story/create"
-                className="group flex items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hover:from-blue-100 hover:to-blue-200 transition-all duration-300 hover:scale-105"
-              >
-                <div className="bg-blue-500 p-2 rounded-lg mr-3 group-hover:bg-blue-600 transition-colors">
-                  <Plus className="w-5 h-5 text-white" />
-                </div>
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900">Add Story</p>
-                  <p className="text-sm text-gray-600">Create new content</p>
-                </div>
-              </a>
+          {auth?.user?.roles?.includes("admin") && (
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Quick Actions
+                </h3>
+                <Settings className="w-5 h-5 text-gray-400" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                <a
+                  href="/story/create"
+                  className="group flex items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hover:from-blue-100 hover:to-blue-200 transition-all duration-300 hover:scale-105"
+                >
+                  <div className="bg-blue-500 p-2 rounded-lg mr-3 group-hover:bg-blue-600 transition-colors">
+                    <Plus className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-gray-900">Add Story</p>
+                    <p className="text-sm text-gray-600">Create new content</p>
+                  </div>
+                </a>
 
-              <a
-                href="/user"
-                className="group flex items-center p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl hover:from-emerald-100 hover:to-emerald-200 transition-all duration-300 hover:scale-105"
-              >
-                <div className="bg-emerald-500 p-2 rounded-lg mr-3 group-hover:bg-emerald-600 transition-colors">
-                  <UserPlus className="w-5 h-5 text-white" />
-                </div>
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900">Manage Users</p>
-                  <p className="text-sm text-gray-600">User administration</p>
-                </div>
-              </a>
+                <a
+                  href="/user"
+                  className="group flex items-center p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl hover:from-emerald-100 hover:to-emerald-200 transition-all duration-300 hover:scale-105"
+                >
+                  <div className="bg-emerald-500 p-2 rounded-lg mr-3 group-hover:bg-emerald-600 transition-colors">
+                    <UserPlus className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-gray-900">Manage Users</p>
+                    <p className="text-sm text-gray-600">User administration</p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Recent Stories */}
@@ -247,12 +251,14 @@ export default function Dashboard() {
                     Recent Users
                   </h3>
                 </div>
-                <a
-                  href="/user"
-                  className="text-emerald-500 hover:text-emerald-600 font-medium text-sm flex items-center"
-                >
-                  View all <ChevronRight className="w-4 h-4 ml-1" />
-                </a>
+                {auth?.user?.roles?.includes("admin") && (
+                  <a
+                    href="/user"
+                    className="text-emerald-500 hover:text-emerald-600 font-medium text-sm flex items-center"
+                  >
+                    View all <ChevronRight className="w-4 h-4 ml-1" />
+                  </a>
+                )}
               </div>
               <div className="space-y-4">
                 {recentUsers.map((user) => (
