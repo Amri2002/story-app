@@ -42,5 +42,5 @@ jobs:
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: laravel-story-app-gsggg7fvdsbpfzgn # Replace this
+          app-name: laravel-story-app
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
