@@ -20,14 +20,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::middleware(['verified', 'role:' . RolesEnum::Admin->value])->group(function () {
+    // Admin-only user management (no email verification required)
+    Route::middleware(['role:' . RolesEnum::Admin->value])->group(function () {
         Route::get('/user', [UserController::class, 'index'])->name('user.index');
         Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
         Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
     });
 
+    // Main app routes (no email verification required)
     Route::middleware([
-        'verified',
         sprintf('role:%s|%s|%s',
             RolesEnum::User->value,
             RolesEnum::Commenter->value,
@@ -35,7 +36,7 @@ Route::middleware('auth')->group(function () {
         )
     ])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->middleware(['auth', 'verified'])->name('dashboard');
+            ->middleware(['auth'])->name('dashboard');
 
         Route::resource('story', StoryController::class)
             ->except(['index', 'show'])
