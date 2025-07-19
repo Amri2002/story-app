@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('story', StoryController::class)
             ->except(['index', 'show'])
-            ->middleware('can:' . PermissionsEnum::ManageStories->value);
+             ->middleware('role:' . RolesEnum::Admin->value);
 
         Route::get('/story', [StoryController::class, 'index'])->name('story.index');
         Route::get('/story/{story}', [StoryController::class, 'show'])->name('story.show');
