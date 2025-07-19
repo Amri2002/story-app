@@ -1,3 +1,4 @@
+web.php
 <?php
 
 use App\Http\Controllers\StoryController;
@@ -20,15 +21,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Admin-only user management (no email verification required)
-    Route::middleware(['role:' . RolesEnum::Admin->value])->group(function () {
+    Route::middleware(['verified', 'role:' . RolesEnum::Admin->value])->group(function () {
         Route::get('/user', [UserController::class, 'index'])->name('user.index');
         Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
         Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
     });
 
-    // Main app routes (no email verification required)
     Route::middleware([
+        'verified',
         sprintf('role:%s|%s|%s',
             RolesEnum::User->value,
             RolesEnum::Commenter->value,
@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
         )
     ])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->middleware(['auth'])->name('dashboard');
+            ->middleware(['auth', 'verified'])->name('dashboard');
 
         Route::resource('story', StoryController::class)
             ->except(['index', 'show'])
@@ -57,10 +57,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// TEMPORARY SEEDER ROUTE – REMOVE AFTER RUNNING ONCE
-Route::get('/run-seeders', function () {
-    Artisan::call('db:seed');
-    return 'Seeders executed successfully.';
-});
+
 
 require __DIR__.'/auth.php';
