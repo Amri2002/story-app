@@ -50,10 +50,10 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/story/{story}/comments', [CommentController::class, 'store'])
             ->name('comment.store')
-            ->middleware('can:' . PermissionsEnum::ManageComments->value);
+           ->middleware('role:' . RolesEnum::Admin->value . '|' . RolesEnum::Commenter->value);
         Route::delete('/comment/{comment}', [CommentController::class, 'destroy'])
             ->name('comment.destroy')
-            ->middleware('can:' . PermissionsEnum::ManageComments->value);
+          ->middleware('role:' . RolesEnum::Admin->value . '|' . RolesEnum::Commenter->value);
     });
 });
 
